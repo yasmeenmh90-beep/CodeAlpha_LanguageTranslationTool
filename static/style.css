@@ -2536,3 +2536,27 @@ kbd {
  .rail-link { font-size:.75rem; gap:6px; }
  .rail-link .icon { width:15px;height:15px; }
 }
+
+/* Phase 3 — motion driven by existing translation and speech UI state. */
+.activity-tag { display:inline-flex; align-items:center; gap:8px; white-space:nowrap; }
+.activity-dot { width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor; }
+.orb-halo { position:absolute;inset:18px;border-radius:50%;background:radial-gradient(circle,transparent 46%,var(--accent-soft-2) 67%,transparent 73%); }
+#main[data-activity="translating"] .activity-tag,
+#main[data-activity="listening"] .activity-tag,
+#main[data-activity="speaking"] .activity-tag { background:var(--accent-soft);border-color:var(--accent); }
+#main[data-activity="translating"] .translator { outline:1px solid var(--accent); }
+@media(prefers-reduced-motion:no-preference) {
+ .hero-art .orb-ring { animation:lingua-orbit 12s linear infinite; }
+ .hero-art .orb-ring--two { animation-duration:17s;animation-direction:reverse; }
+ .hero-art .orb-halo { animation:lingua-breathe 4s ease-in-out infinite; }
+ #main[data-activity="translating"] .orb-ring { animation-duration:2.5s; }
+ #main[data-activity="listening"] .orb-halo,#main[data-activity="speaking"] .orb-halo { animation-duration:1s; }
+ #main:not([data-activity="ready"]) .activity-dot { animation:lingua-breathe 1.2s ease-in-out infinite; }
+ .output__text:not([hidden]),.mcard { animation:lingua-reveal .28s ease-out both; }
+ .swap-btn:active:not(:disabled) .icon { transform:rotate(180deg);transition:transform .25s ease; }
+ .guide-grid article { transition:border-color .2s,transform .2s; }
+ .guide-grid article:hover { transform:translateY(-3px);border-color:var(--border-strong); }
+ @keyframes lingua-orbit { from { transform:rotate(-30deg) scaleY(.58); } to { transform:rotate(330deg) scaleY(.58); } }
+ @keyframes lingua-breathe { 0%,100% { opacity:.55;scale:.94; } 50% { opacity:1;scale:1.04; } }
+ @keyframes lingua-reveal { from { opacity:0;transform:translateY(5px); } to { opacity:1;transform:translateY(0); } }
+}
