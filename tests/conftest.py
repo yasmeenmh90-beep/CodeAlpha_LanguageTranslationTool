@@ -6,6 +6,7 @@ from app import translators
 
 PROVIDER_ENV = (
     "TRANSLATOR_PROVIDER",
+    "LINGUA_OLLAMA_MODEL",
     "GOOGLE_API_KEY",
     "AZURE_TRANSLATOR_KEY",
     "AZURE_TRANSLATOR_REGION",
