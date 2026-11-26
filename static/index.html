@@ -20,6 +20,7 @@
   <script type="module" src="/static/js/activity.js"></script>
   <script type="module" src="/static/js/advanced.js"></script>
 <script type="module" src="/static/js/multimodal.js"></script>
+<script type="module" src="/static/js/dna.js"></script>
 </head>
 <body>
   <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
@@ -108,6 +109,7 @@
       <a href="#history-title" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-history"/></svg><span>Translation library</span></a>
       <a href="#advanced-studio" class="rail-link">Advanced intelligence</a>
       <a href="#multimodal-studio" class="rail-link">Multimodal studio</a>
+<a href="#dna-studio" class="rail-link">Translation DNA</a>
 <a href="#workspace-guide" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Workspace guide</span></a>
     </nav>
     <div class="rail-note"><span class="rail-caption">LINGUA / 01</span><p>Language without boundaries.</p><small>CodeAlpha · AI Internship</small></div>
@@ -366,7 +368,21 @@
 <button type="button" class="btn btn--outline" id="studio-clear">Clear conversation</button>
 <p id="studio-voice-status" role="status"></p><div id="studio-turns" aria-live="polite"></div>
 </div></section>
-<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">04 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
+<section class="container workspace-guide" id="dna-studio" aria-labelledby="dna-title">
+<p class="rail-caption">04 / QUALITY LAB</p><h2 id="dna-title">Translation DNA</h2>
+<form id="dna-form" class="advanced-form">
+<label>Original text<textarea id="dna-source" required maxlength="5000" rows="4"></textarea></label>
+<label>Translated text<textarea id="dna-target" required maxlength="5000" rows="4"></textarea></label>
+<label>Original language<select id="dna-source-lang"></select></label>
+<label>Translation language<select id="dna-target-lang"></select></label>
+<label>Required target terms (one per line)<textarea id="dna-terms" rows="3" maxlength="2020"></textarea></label>
+<label class="dna-opt"><input type="checkbox" id="dna-back"> Request back translation (sends translated text to external provider)</label>
+<button type="submit" class="btn btn--primary" id="dna-run" disabled>Analyse translation DNA</button>
+<p>Consistency checks are not accuracy scores. Back translation is optional and is not proof of correctness.</p>
+</form>
+<div class="dna-panel"><div id="dna-helix" aria-hidden="true"></div><div id="dna-results" aria-live="polite">Not evaluated</div></div>
+</section>
+<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">05 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
   </main>
   </div>
 
