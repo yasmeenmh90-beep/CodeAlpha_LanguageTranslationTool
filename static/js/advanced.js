@@ -5,16 +5,18 @@ const mode = get("advanced-mode");
 const run = get("advanced-run");
 let busy = false;
 let contextual = false;
+let agentic = false;
 async function request(url, body) {
   const response = await fetch(url, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {});
   if (!response.ok) throw new Error("Request failed (" + response.status + ")");
   return response.json();
 }
 function sync() {
-  const ai = mode.value === "contextual";
+  const ai = mode.value !== "compare";
   get("advanced-context").hidden = !ai;
   get("advanced-engines").hidden = ai;
-  run.disabled = busy || (ai && !contextual);
+  run.disabled = busy || (mode.value === "contextual" && !contextual) || (mode.value === "agentic" && !agentic);
+  mode.disabled = busy;
 }
 function show(title, text) {
   const card = document.createElement("article");
@@ -47,6 +49,8 @@ async function init() {
       get("advanced-engines").append(label);
     }
     contextual = capabilities.contextual;
+    agentic = capabilities.agentic;
+    if (!agentic) { mode.options[2].disabled = true; mode.options[2].textContent += " (not enabled)"; }
     if (!contextual) {
       mode.options[1].disabled = true;
       mode.options[1].textContent += " (server configuration required)";
@@ -57,7 +61,7 @@ async function init() {
       if (busy) return;
       results.replaceChildren();
       const body = {text:get("advanced-text").value, source:get("advanced-source").value, target:get("advanced-target").value};
-      const ai = mode.value === "contextual";
+      const ai = mode.value !== "compare";
       if (!ai) {
         body.engines = Array.from(get("advanced-engines").querySelectorAll("input:checked"), el => el.value);
         if (!body.engines.length) { show("Select a provider", "Choose at least one configured engine."); return; }
@@ -65,7 +69,14 @@ async function init() {
       busy = true; sync(); results.setAttribute("aria-busy","true");
       try {
         const data = await request("/api/translate/" + mode.value, body);
-        if (ai) show(data.provider + " · " + data.tone, data.translated_text);
+        if (ai) {
+          show(data.provider + " · " + (data.tone || "Reviewed translation"), data.translated_text);
+          if (data.trace) {
+            for (const step of data.trace) show(step.agent, step.status + " · " + step.elapsed_ms + " ms" + (step.tokens == null ? "" : " · " + step.tokens + " tokens"));
+            show("Review findings", data.review);
+            show("Review limitations", data.quality_note);
+          }
+        }
         else for (const item of data.results) show(item.engine + (item.ok ? " · " + item.elapsed_ms + " ms" + (item.result.cached ? " (cached)" : "") : ""), item.ok ? item.result.translated_text : item.error);
       } catch (error) { show("Translation failed", error.message); }
       finally { busy = false; sync(); results.setAttribute("aria-busy","false"); }
