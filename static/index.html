@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/static/style.css" />
   <script type="module" src="/static/js/app.js"></script>
   <script type="module" src="/static/js/activity.js"></script>
+  <script type="module" src="/static/js/advanced.js"></script>
 </head>
 <body>
   <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
@@ -104,6 +105,7 @@
     <nav class="rail-nav" aria-label="Tools">
       <a href="#translator" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>Translation studio</span></a>
       <a href="#history-title" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-history"/></svg><span>Translation library</span></a>
+      <a href="#advanced-studio" class="rail-link">Advanced intelligence</a>
       <a href="#workspace-guide" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Workspace guide</span></a>
     </nav>
     <div class="rail-note"><span class="rail-caption">LINGUA / 01</span><p>Language without boundaries.</p><small>CodeAlpha · AI Internship</small></div>
@@ -328,7 +330,19 @@
         </div>
       </div>
     </section>
-  <section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">03 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
+  <section class="container workspace-guide" id="advanced-studio" aria-labelledby="advanced-title">
+<p class="rail-caption">02 / INTELLIGENCE</p><h2 id="advanced-title">Advanced translation</h2>
+<form id="advanced-form" class="advanced-form">
+<label>Source language<select id="advanced-source"></select></label>
+<label>Target language<select id="advanced-target"></select></label>
+<label>Text<textarea id="advanced-text" required maxlength="5000" rows="4"></textarea></label>
+<label>Mode<select id="advanced-mode"><option value="compare">Compare providers</option><option value="contextual">Contextual AI</option></select></label>
+<div id="advanced-engines"></div>
+<div id="advanced-context" hidden><label>Tone<select id="advanced-tone"><option>neutral</option><option>professional</option><option>casual</option><option>academic</option><option>formal</option></select></label><label>Style<select id="advanced-style"><option>faithful</option><option>idiomatic</option></select></label><label>Background context<textarea id="advanced-background" maxlength="1000" rows="2"></textarea></label></div>
+<p>Text is sent to selected external providers. Comparison measures request time, not translation quality.</p>
+<button class="btn btn--primary" type="submit" id="advanced-run" disabled>Run translation</button>
+</form><div id="advanced-results" aria-live="polite"></div></section>
+<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">03 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
   </main>
   </div>
 
