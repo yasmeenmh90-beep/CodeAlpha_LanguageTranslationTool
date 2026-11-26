@@ -312,7 +312,7 @@ class ContextRequest(TranslateRequest):
 @app.get("/api/advanced/capabilities")
 def advanced_capabilities():
     return {"contextual": bool(os.getenv("OPENAI_API_KEY") and os.getenv("LINGUA_AI_MODEL")),
-            "comparison": True}
+            "comparison": True, "agentic": os.getenv("LINGUA_AGENTIC_ENABLED") == "1" and bool(os.getenv("OPENAI_API_KEY") and os.getenv("LINGUA_AI_MODEL"))}
 
 
 @app.post("/api/translate/contextual")
@@ -338,3 +338,15 @@ async def contextual(req: ContextRequest):
         raise HTTPException(502, "Contextual translation provider failed.")
     return {"translated_text": translated.strip(), "provider": "openai", "model": model,
             "tone": req.tone, "style": req.style}
+
+
+@app.post("/api/translate/agentic")
+async def agentic(req: ContextRequest):
+    from .agents import orchestrate, AgentFailure
+    if not advanced_capabilities()["agentic"]:
+        raise HTTPException(503, "Agentic translation is not enabled.")
+    payload = req.model_dump(include={"text", "source", "target", "tone", "style", "context", "romanized"})
+    try:
+        return await orchestrate(payload, os.environ["OPENAI_API_KEY"], os.environ["LINGUA_AI_MODEL"])
+    except AgentFailure as exc:
+        return JSONResponse(status_code=502, content={"detail": "Agent pipeline failed", "trace": exc.trace})
