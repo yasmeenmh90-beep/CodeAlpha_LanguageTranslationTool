@@ -350,3 +350,21 @@ async def agentic(req: ContextRequest):
         return await orchestrate(payload, os.environ["OPENAI_API_KEY"], os.environ["LINGUA_AI_MODEL"])
     except AgentFailure as exc:
         return JSONResponse(status_code=502, content={"detail": "Agent pipeline failed", "trace": exc.trace})
+
+
+@app.post("/api/extract/{kind}")
+async def extract_file(kind: Literal["txt", "pdf", "docx", "png", "jpg", "jpeg"], request: Request):
+    from .documents import extract, MAX_BYTES
+    from starlette.concurrency import run_in_threadpool
+    data = bytearray()
+    async for chunk in request.stream():
+        if len(data) + len(chunk) > MAX_BYTES:
+            raise HTTPException(413, "File exceeds 5 MB.")
+        data.extend(chunk)
+    try:
+        text = await run_in_threadpool(extract, bytes(data), kind)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc) if type(exc) is ValueError else "Invalid file encoding.") from None
+    except Exception:
+        raise HTTPException(422, "Could not extract text. Check file format and OCR installation.") from None
+    return {"text": text, "characters": len(text)}
