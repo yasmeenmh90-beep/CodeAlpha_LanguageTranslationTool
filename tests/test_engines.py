@@ -148,9 +148,9 @@ def test_providers_endpoint_defaults(monkeypatch):
     monkeypatch.setenv("AZURE_TRANSLATOR_KEY", "k")
     data = client.get("/api/providers").json()
     assert data["default"] == "auto"
-    assert [p["name"] for p in data["providers"]] == ["microsoft", "google", "mymemory", "free"]
+    assert [p["name"] for p in data["providers"]] == ["ollama", "microsoft", "google", "mymemory", "free"]
     configured = {p["name"]: p["configured"] for p in data["providers"]}
-    assert configured == {"microsoft": True, "google": False, "mymemory": True, "free": True}
+    assert configured == {"ollama": False, "microsoft": True, "google": False, "mymemory": True, "free": True}
     assert data["chain"] == ["microsoft", "mymemory", "free"]
     assert all(p["label"] for p in data["providers"])
 
