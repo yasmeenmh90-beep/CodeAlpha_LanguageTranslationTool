@@ -11,9 +11,9 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-D4AF37?style=for-the-badge&logo=javascript&logoColor=white&labelColor=080808)
 ![CI](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/actions/workflows/ci.yml/badge.svg)
 
-**25 languages · 4 translation engines · 7 focused workspaces**
+**25 languages · 5 translation engines · 7 focused workspaces**
 
-[Explore features](#workspaces) · [Quick start](#quick-start) · [Architecture](#architecture) · [API reference](#api-reference) · [Testing](#testing)
+[Visual showcase](#visual-showcase) · [Explore features](#workspaces) · [Quick start](#quick-start) · [Architecture](#architecture) · [API reference](#api-reference) · [Testing](#testing)
 
 **CodeAlpha — Artificial Intelligence Internship / Task 01**
 
@@ -39,7 +39,46 @@ The minimal Black & Gold interface uses a compact navigation rail, animated glob
 | **Translation Library** | Recent translations, favorites, restoration, deletion and undo |
 | **Workspace Guide** | Built-in usage guidance |
 
-> The latest interface uses hash-based workspace navigation and retains existing controls in the DOM. Current screenshots will be added after browser verification.
+## Visual showcase
+
+![LINGUA AI — Black and Gold dashboard](docs/screenshots/01-dashboard.png)
+
+### Translation and intelligence
+
+| English → French | English → Arabic |
+|---|---|
+| ![English → French](docs/screenshots/02-english-french.png) | ![English → Arabic](docs/screenshots/03-english-arabic.png) |
+
+| Hindi → English | Contextual AI |
+|---|---|
+| ![Hindi → English](docs/screenshots/04-hindi-english.png) | ![Contextual AI](docs/screenshots/09-contextual-ai.png) |
+
+| Document extraction | Translation history |
+|---|---|
+| ![Document extraction](docs/screenshots/10-document-extraction.png) | ![Translation history](docs/screenshots/07-translation-history.png) |
+
+### Quality and learning
+
+| Matched DNA checks | DNA review needed |
+|---|---|
+| ![Matched DNA checks](docs/screenshots/12-dna-matched-checks.png) | ![DNA review needed](docs/screenshots/13-dna-review-needed.png) |
+
+| Vocabulary | Spaced review |
+|---|---|
+| ![Vocabulary](docs/screenshots/14-vocabulary-flashcard.png) | ![Spaced review](docs/screenshots/15-flashcard-review.png) |
+
+### Responsive interface
+
+| Light theme | Dark theme |
+|---|---|
+| ![Light theme](docs/screenshots/17-responsive-light-theme.png) | ![Dark theme](docs/screenshots/18-responsive-dark-theme.png) |
+
+### Recorded edge cases
+
+The recordings also document [Roman Urdu JSON output](docs/screenshots/06-roman-urdu-json-output.png), [language detection output](docs/screenshots/05-language-detection-json-output.png), [conversation JSON output](docs/screenshots/11-conversation-json-output.png), [clipboard confirmation](docs/screenshots/19-clipboard-confirmation-json-output.png) and [partial provider comparison](docs/screenshots/08-provider-comparison-partial.png). These are not clean live passes: output formatting and provider reliability need further validation. The [advanced workspace](docs/screenshots/16-advanced-workspace.png) demonstrates the interface, not successful live agent execution.
+
+[Browse all 26 original recording screenshots](docs/screenshots/)
+
 
 ## Architecture
 
@@ -49,7 +88,7 @@ flowchart TD
     U --> L["Browser-local history, vocabulary and metrics"]
     A --> T["Translation & language detection"]
     T --> C["In-memory LRU cache"]
-    T --> P["Microsoft / Google / MyMemory / free web"]
+    T --> P["Ollama / Microsoft / Google / MyMemory / free web"]
     A --> AI["Optional contextual AI"]
     AI --> M["Analyst → Translator → Reviewer → Finalizer"]
     A --> D["Document extraction & OCR"]
@@ -64,7 +103,9 @@ flowchart TD
 flowchart LR
     R["Request"] --> C{"Cache hit?"}
     C -->|Yes| O["Result"]
-    C -->|No| M["Microsoft"]
+    C -->|No| L["Ollama (if configured)"]
+    L -->|Unavailable / fails| M["Microsoft"]
+    L -->|Success| O
     M -->|Unavailable / fails| G["Google Cloud"]
     G -->|Unavailable / fails| Y["MyMemory"]
     Y -->|Fails| F["Free web"]
@@ -83,8 +124,8 @@ Auto mode skips unconfigured providers. Transient errors receive a bounded retry
 |---|---|
 | Backend | Python, FastAPI, Pydantic, httpx |
 | Frontend | HTML5, CSS3, vanilla JavaScript ES modules, SVG |
-| Translation | Microsoft Translator, Google Cloud, MyMemory, deep-translator |
-| Optional AI | OpenAI Chat Completions API |
+| Translation | Ollama, Microsoft Translator, Google Cloud, MyMemory, deep-translator |
+| Optional AI | Local Ollama (standard and contextual); OpenAI Chat Completions API (contextual and agentic) |
 | Documents | pypdf, defusedxml, Pillow, pytesseract |
 | Speech | Web Speech API, Web Audio API |
 | Persistence | Browser localStorage, server in-memory cache |
@@ -130,11 +171,25 @@ Basic translation works without paid API keys, subject to free-provider availabi
 | `MYMEMORY_EMAIL` | Optional MyMemory quota configuration |
 | `CACHE_SIZE` | LRU capacity; 0 disables cache |
 | `REQUEST_TIMEOUT` | Provider attempt timeout |
+| `LINGUA_OLLAMA_MODEL` | Installed local Ollama model, e.g. `qwen3:8b` |
 | `OPENAI_API_KEY` | Optional contextual AI credential |
 | `LINGUA_AI_MODEL` | Compatible configured chat model |
 | `LINGUA_AGENTIC_ENABLED` | Set to 1 to enable four-call review; default 0 |
 
-See [the environment template](.env.example). Optional AI calls may incur charges.
+See [the environment template](.env.example). Optional cloud AI calls may incur charges.
+
+### Local AI (no cloud API key)
+
+Install and start Ollama, then run:
+
+```bash
+ollama pull qwen3:8b
+export LINGUA_OLLAMA_MODEL=qwen3:8b
+export TRANSLATOR_PROVIDER=ollama
+python -m uvicorn app.main:app --reload --port 8000
+```
+
+Pinning Ollama prevents standard translation fallback to remote providers. Explicit comparisons can still call remote providers. Local agentic execution is not implemented.
 
 ## API reference
 
@@ -171,6 +226,7 @@ app/
   translators.py    Provider adapters, fallback and cache
   detect.py         Language and script heuristics
   languages.py      Supported language catalog
+  local_ai.py       Local Ollama inference
   agents.py         Four-stage AI orchestration
   documents.py      Text extraction and OCR
   dna.py            Deterministic translation checks
@@ -206,11 +262,28 @@ done
 
 | Recorded verification | Result |
 |---|---|
-| Backend suite before compact navigation redesign | 61 passed in 0.72 seconds |
-| JavaScript syntax before redesign | 17 modules checked |
+| Backend suite (26 Nov 2026) | 63 passed, 1 deprecation warning, 0.66 seconds |
+| JavaScript syntax | 18 modules passed |
+| Python compilation | Passed |
+| Isolated dependency validation | No broken requirements found |
 | OCR engine on development Mac | Tesseract 5.5.4 installed |
 
-GitHub Actions runs backend tests and module syntax checks. See [current workflow results](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/actions). Latest compact UI browser testing, isolated dependency verification and live AI provider validation remain pending. The previous shared Anaconda environment reported unrelated package conflicts; use the isolated virtual environment above.
+GitHub Actions runs backend tests and module syntax checks. See [current workflow results](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/actions). Recorded browser demonstrations and isolated dependency checks are available. Automated tests use mocked providers and do not establish live provider reliability.
+
+![63 automated tests passed](docs/screenshots/20-backend-tests-63-passed.png)
+
+![System validation and installed models](docs/screenshots/21-system-validation-models-ocr.png)
+
+| Swagger API | Advanced endpoints |
+|---|---|
+| ![Swagger API](docs/screenshots/22-swagger-api.png) | ![Advanced endpoints](docs/screenshots/23-swagger-advanced-endpoints.png) |
+
+![Health check](docs/screenshots/24-health-check.png)
+
+| HTTP 422 input validation | HTTP 413 request rejection |
+|---|---|
+| ![HTTP 422 input validation](docs/screenshots/25-empty-input-validation-422.png) | ![HTTP 413 request rejection](docs/screenshots/26-oversized-request-rejected-413.png) |
+
 
 ## Security, privacy & limitations
 
@@ -225,7 +298,7 @@ GitHub Actions runs backend tests and module syntax checks. See [current workflo
 
 ## Development status
 
-Core workspaces, compact navigation, security guard and CI configuration are published on `main`. Final browser smoke tests, live integration checks and updated screenshots are outstanding.
+Core workspaces, compact navigation, security guard and CI configuration are published on `main`. 26 recording screenshots and local automated validation are published. Live multi-agent execution, clean output formatting and complete provider reliability remain outstanding.
 
 ---
 
