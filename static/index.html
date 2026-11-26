@@ -97,6 +97,16 @@
     </div>
   </header>
 
+  <div class="workspace-shell">
+  <aside class="workspace-rail" aria-label="Workspace navigation">
+    <div class="rail-caption">WORKSPACE</div>
+    <nav class="rail-nav" aria-label="Tools">
+      <a href="#translator" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span>Translation studio</span></a>
+      <a href="#history-title" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-history"/></svg><span>Translation library</span></a>
+      <a href="#workspace-guide" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Workspace guide</span></a>
+    </nav>
+    <div class="rail-note"><span class="rail-caption">LINGUA / 01</span><p>Language without boundaries.</p><small>CodeAlpha · AI Internship</small></div>
+  </aside>
   <main id="main">
     <div class="backdrop" aria-hidden="true">
       <span class="blob blob--1"></span>
@@ -104,7 +114,7 @@
       <span class="blob blob--3"></span>
     </div>
 
-    <section class="hero container">
+    <section class="hero container"><div class="hero-art" aria-hidden="true"><div class="orb-ring orb-ring--one"></div><div class="orb-ring orb-ring--two"></div><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></div>
       <p class="eyebrow">
         <svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="#i-sparkles" /></svg>
         Language Translator
@@ -122,7 +132,7 @@
       </ul>
     </section>
 
-    <section class="container" aria-label="Translator">
+    <section class="container" aria-label="Translator"><div class="workspace-heading"><div><p class="rail-caption">01 / STUDIO</p><h2>Translation workspace</h2></div><span class="workspace-tag">Multi-engine</span></div>
       <div class="toolbar">
         <button id="multi-toggle" class="switch" type="button" role="switch" aria-checked="false">
           <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
@@ -317,7 +327,9 @@
         </div>
       </div>
     </section>
+  <section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">03 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
   </main>
+  </div>
 
   <footer class="footer">
     <div class="container footer__inner">
@@ -326,7 +338,7 @@
           <rect width="32" height="32" rx="9" fill="url(#brand-gradient)" />
           <path d="M15 13h9a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-.5v3L20 24h-5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3z" fill="#fff" />
         </svg>
-        <span>Translate<span class="brand__x">X</span></span>
+        <span>LINGUA <span class="brand__x">AI</span></span>
       </span>
       <p>Built for the CodeAlpha AI Internship · FastAPI · Microsoft/Google Translation APIs</p>
     </div>
