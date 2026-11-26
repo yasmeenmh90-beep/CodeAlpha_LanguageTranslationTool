@@ -22,6 +22,7 @@
 <script type="module" src="/static/js/multimodal.js"></script>
 <script type="module" src="/static/js/dna.js"></script>
 <script type="module" src="/static/js/learning.js"></script>
+<script type="module" src="/static/js/workspace.js"></script>
 </head>
 <body>
   <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
@@ -123,7 +124,7 @@
       <span class="blob blob--3"></span>
     </div>
 
-    <section class="hero container"><div class="hero-art" aria-hidden="true"><div class="orb-halo"></div><div class="orb-ring orb-ring--one"></div><div class="orb-ring orb-ring--two"></div><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></div>
+    <section class="hero container" data-workspace="translator"><div class="hero-art" aria-hidden="true"><div class="orb-halo"></div><div class="orb-ring orb-ring--one"></div><div class="orb-ring orb-ring--two"></div><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></div>
       <p class="eyebrow">
         <svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="#i-sparkles" /></svg>
         Language Translator
@@ -141,7 +142,7 @@
       </ul>
     </section>
 
-    <section class="container" aria-label="Translator"><div class="workspace-heading"><div><p class="rail-caption">01 / STUDIO</p><h2>Translation workspace</h2></div><span class="workspace-tag activity-tag" id="studio-activity"><span class="activity-dot" aria-hidden="true"></span><span id="studio-activity-label">Ready</span></span></div>
+    <section class="container" data-workspace="translator" aria-label="Translator"><div class="workspace-heading"><div><p class="rail-caption">01 / STUDIO</p><h2>Translation workspace</h2></div><span class="workspace-tag activity-tag" id="studio-activity"><span class="activity-dot" aria-hidden="true"></span><span id="studio-activity-label">Ready</span></span></div>
       <div class="toolbar">
         <button id="multi-toggle" class="switch" type="button" role="switch" aria-checked="false">
           <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
@@ -297,7 +298,7 @@
       </p>
     </section>
 
-    <section class="container history" aria-labelledby="history-title">
+    <section data-workspace="history-title" class="container history" aria-labelledby="history-title">
       <div class="history__head">
         <h2 id="history-title" class="history__title">
           <span class="section-icon" aria-hidden="true"><svg class="icon icon--sm" focusable="false"><use href="#i-history" /></svg></span>
@@ -336,7 +337,7 @@
         </div>
       </div>
     </section>
-  <section class="container workspace-guide" id="advanced-studio" aria-labelledby="advanced-title">
+  <section class="container workspace-guide" id="advanced-studio" data-workspace="advanced-studio" aria-labelledby="advanced-title">
 <p class="rail-caption">02 / INTELLIGENCE</p><h2 id="advanced-title">Advanced translation</h2>
 <form id="advanced-form" class="advanced-form">
 <label>Source language<select id="advanced-source"></select></label>
@@ -348,7 +349,7 @@
 <p>Text is sent to selected external providers. Comparison measures request time, not translation quality.</p>
 <button class="btn btn--primary" type="submit" id="advanced-run" disabled>Run translation</button>
 </form><div id="advanced-results" aria-live="polite"></div></section>
-<section class="container workspace-guide" id="multimodal-studio" aria-labelledby="multimodal-title">
+<section class="container workspace-guide" id="multimodal-studio" data-workspace="multimodal-studio" aria-labelledby="multimodal-title">
 <p class="rail-caption">03 / MULTIMODAL</p><h2 id="multimodal-title">Voice, vision & documents</h2>
 <div class="advanced-form">
 <h3>Document & vision studio</h3><label>PDF, DOCX, TXT, PNG or JPEG (up to 5 MB)<input type="file" id="studio-file" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"></label>
@@ -370,7 +371,7 @@
 <button type="button" class="btn btn--outline" id="studio-clear">Clear conversation</button>
 <p id="studio-voice-status" role="status"></p><div id="studio-turns" aria-live="polite"></div>
 </div></section>
-<section class="container workspace-guide" id="dna-studio" aria-labelledby="dna-title">
+<section class="container workspace-guide" id="dna-studio" data-workspace="dna-studio" aria-labelledby="dna-title">
 <p class="rail-caption">04 / QUALITY LAB</p><h2 id="dna-title">Translation DNA</h2>
 <form id="dna-form" class="advanced-form">
 <label>Original text<textarea id="dna-source" required maxlength="5000" rows="4"></textarea></label>
@@ -384,12 +385,12 @@
 </form>
 <div class="dna-panel"><div id="dna-helix" aria-hidden="true"></div><div id="dna-results" aria-live="polite">Not evaluated</div></div>
 </section>
-<section class="container workspace-guide" id="learning-studio"><p class="rail-caption">05 / LEARNING</p><h2>Vocabulary & analytics</h2>
+<section class="container workspace-guide" id="learning-studio" data-workspace="learning-studio"><p class="rail-caption">05 / LEARNING</p><h2>Vocabulary & analytics</h2>
 <form id="learning-form" class="advanced-form"><label>Word or phrase<input id="learning-front" required maxlength="500"></label><label>Translation<input id="learning-back" required maxlength="500"></label><button class="btn btn--primary">Save flashcard</button></form>
 <p id="learning-status" role="status"></p><div id="learning-review" class="advanced-form"></div><div id="learning-library"></div>
 <h3>Translation activity</h3><p>Device-local records from the standard translation workspace only (latest 1,000 outcomes). No original text stored in analytics.</p><div id="learning-metrics" class="guide-grid"></div>
 <button type="button" id="learning-export" class="btn btn--outline">Export analytics JSON</button><button type="button" id="learning-reset" class="btn btn--outline">Clear analytics</button></section>
-<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">06 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
+<section class="container workspace-guide" id="workspace-guide" data-workspace="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">06 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
   </main>
   </div>
 
