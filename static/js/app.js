@@ -1,3 +1,4 @@
+import { recordUsage } from "./learning-data.js";
 // TranslateX — app entry point. Owns application state and wires the UI to the
 // API, storage, picker, engine menu, speech, voice, toast and history modules.
 import { $, $$, el, icon, setIcon, isMac, isTypingTarget, prefersReducedMotion } from "./dom.js";
@@ -559,6 +560,9 @@ async function runTranslate({ force = false } = {}) {
     if (seq !== state.seq) return; // a newer request superseded this one
     const elapsed = Math.round(performance.now() - started);
     state.error = null;
+    if (multi) {
+      for (const item of data.results) recordUsage({target:item.target,provider:item.result?.provider || "unknown",elapsed:null,cached:item.result?.cached,ok:item.ok});
+    } else recordUsage({target:req.target,provider:data.provider,elapsed,cached:data.cached,ok:true});
 
     if (multi) {
       state.batch = { text, source: req.source, results: data.results, elapsed };
@@ -579,6 +583,7 @@ async function runTranslate({ force = false } = {}) {
     updateRomanHint();
   } catch (err) {
     if (err.name === "AbortError" || seq !== state.seq) return;
+    recordUsage({target:req.target || "batch",provider:req.provider || "auto",elapsed:Math.round(performance.now()-started),ok:false});
     state.error =
       err instanceof api.ApiError
         ? err
