@@ -7,3 +7,8 @@ deep-translator>=1.11
 # tests
 pytest>=8.0
 respx>=0.21
+
+pypdf>=6.0
+defusedxml>=0.7.1
+Pillow>=11.0
+pytesseract>=0.3.13

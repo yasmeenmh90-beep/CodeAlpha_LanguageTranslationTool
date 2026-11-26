@@ -290,3 +290,8 @@ There are 46 tests. All HTTP calls are mocked with `respx`, and the `requests`-b
 - **Voice input** uses the browser's speech recognition. Chrome sends the audio to Google's servers, so it needs a connection. Firefox doesn't support it, so the mic button is hidden there.
 - Text-to-speech uses the voices installed on your device. Chrome and Edge have the widest language coverage.
 - API keys stay on the server and are never sent to the browser.
+
+
+## LINGUA AI multimodal studio
+
+Install the updated Python requirements. For English image OCR on macOS, install Tesseract with `brew install tesseract`. OCR runs on the application server, not in the browser. PDF extraction supports text-based PDFs, not scanned PDFs; DOCX extraction returns plain body text, not original layout. Uploads are limited to 5 MB and extracted text to 5000 characters. Review extracted text before transferring it into the translator, which may automatically send it to external translation providers. Browser speech recognition may use a remote browser speech service. The microphone level meter uses local audio samples and requires a secure browser context (localhost or HTTPS). Conversation turns are held in the current page only.
