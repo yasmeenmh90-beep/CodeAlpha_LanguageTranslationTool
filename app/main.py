@@ -368,3 +368,37 @@ async def extract_file(kind: Literal["txt", "pdf", "docx", "png", "jpg", "jpeg"]
     except Exception:
         raise HTTPException(422, "Could not extract text. Check file format and OCR installation.") from None
     return {"text": text, "characters": len(text)}
+
+
+class DNARequest(TranslateRequest):
+    translated_text: str = Field(..., min_length=1, max_length=MAX_CHARS)
+    required_terms: list[str] = Field(default_factory=list, max_length=20)
+    back_translate: bool = False
+
+    @field_validator("translated_text")
+    @classmethod
+    def valid_translation(cls, value):
+        return _not_blank(value)
+
+    @field_validator("required_terms")
+    @classmethod
+    def valid_terms(cls, values):
+        if any(not v.strip() or len(v)>100 for v in values):
+            raise ValueError("Terms must contain 1 to 100 characters.")
+        return values
+
+
+@app.post("/api/translation-dna")
+async def translation_dna(req: DNARequest):
+    from .dna import evaluate
+    result = evaluate(req.text, req.translated_text, req.required_terms)
+    if req.back_translate:
+        if req.source == "auto" or req.source == req.target:
+            raise HTTPException(422, "Choose distinct explicit languages for back translation.")
+        try:
+            back = await _translate_one(req.translated_text, req.target, req.source, req.provider, False)
+            result["back_translation"] = {"text": back.translated_text, "provider": back.provider,
+                                          "checks": evaluate(req.text, back.translated_text)["checks"]}
+        except ProvidersExhausted:
+            result["back_translation"] = {"error": "Back translation provider unavailable."}
+    return result
