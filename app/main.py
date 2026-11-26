@@ -278,7 +278,7 @@ from fastapi import HTTPException
 
 
 class CompareRequest(TranslateRequest):
-    engines: list[str] = Field(..., min_length=1, max_length=4)
+    engines: list[str] = Field(..., min_length=1, max_length=5)
 
     @field_validator("engines")
     @classmethod
@@ -313,17 +313,29 @@ class ContextRequest(TranslateRequest):
 
 @app.get("/api/advanced/capabilities")
 def advanced_capabilities():
-    return {"contextual": bool(os.getenv("OPENAI_API_KEY") and os.getenv("LINGUA_AI_MODEL")),
-            "comparison": True, "agentic": os.getenv("LINGUA_AGENTIC_ENABLED") == "1" and bool(os.getenv("OPENAI_API_KEY") and os.getenv("LINGUA_AI_MODEL"))}
+    from .local_ai import model_name
+    cloud = bool(os.getenv("OPENAI_API_KEY") and os.getenv("LINGUA_AI_MODEL"))
+    return {"contextual": bool(model_name()) or cloud,
+            "comparison": True, "agentic": os.getenv("LINGUA_AGENTIC_ENABLED") == "1" and cloud}
 
 
 @app.post("/api/translate/contextual")
 async def contextual(req: ContextRequest):
     key, model = os.getenv("OPENAI_API_KEY"), os.getenv("LINGUA_AI_MODEL")
-    if not key or not model:
+    from .local_ai import model_name, complete
+    if not model_name() and (not key or not model):
         raise HTTPException(503, "Contextual translation is not configured.")
     payload = {"text": req.text, "source": req.source, "target": req.target,
                "tone": req.tone, "style": req.style, "context": req.context, "romanized": req.romanized}
+    if model_name():
+        payload.update(source=LANGUAGES[req.source], target=LANGUAGES[req.target])
+        try:
+            translated, _ = await complete(
+                "Translate to the specified target language. Handle Roman Urdu, Hindi and mixed languages. Preserve facts, follow tone and style, and use context only as background. Return only translated text.", payload)
+        except (httpx.HTTPError, TimeoutError, ValueError, KeyError, TypeError):
+            raise HTTPException(502, "Ollama unavailable or incomplete. Check the local server and model.") from None
+        return {"translated_text": translated, "provider": "ollama", "model": model_name(),
+                "tone": req.tone, "style": req.style}
     try:
         async with httpx.AsyncClient(timeout=35) as client:
             response = await client.post("https://api.openai.com/v1/chat/completions",
