@@ -31,9 +31,9 @@ async def orchestrate(payload, key, model):
                 response.raise_for_status()
                 result = response.json()
                 output = result["choices"][0]["message"]["content"]
-                if not isinstance(output, str) or not output.strip():
+                if result["choices"][0].get("finish_reason") == "length" or not isinstance(output, str) or not output.strip():
                     raise ValueError("Empty response")
-                tokens = result.get("usage", {}).get("total_tokens")
+                tokens = (result.get("usage") or {}).get("total_tokens")
                 if isinstance(tokens, int):
                     usage += tokens
                 trace.append({"agent": name, "status": "completed",
