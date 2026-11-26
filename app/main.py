@@ -1,4 +1,5 @@
 import asyncio
+from .security import RequestGuard
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -20,6 +21,7 @@ MAX_BATCH_TARGETS = 5
 ROMAN_SOURCES = ("ur", "hi")
 
 app = FastAPI(title="Language Translation Tool", version="2.0.0")
+app.add_middleware(RequestGuard)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
@@ -321,7 +323,7 @@ async def contextual(req: ContextRequest):
     if not key or not model:
         raise HTTPException(503, "Contextual translation is not configured.")
     payload = {"text": req.text, "source": req.source, "target": req.target,
-               "tone": req.tone, "style": req.style, "context": req.context}
+               "tone": req.tone, "style": req.style, "context": req.context, "romanized": req.romanized}
     try:
         async with httpx.AsyncClient(timeout=35) as client:
             response = await client.post("https://api.openai.com/v1/chat/completions",
@@ -332,7 +334,7 @@ async def contextual(req: ContextRequest):
                 ]})
             response.raise_for_status()
             translated = response.json()["choices"][0]["message"]["content"]
-            if not isinstance(translated, str) or not translated.strip():
+            if response.json()["choices"][0].get("finish_reason") == "length" or not isinstance(translated, str) or not translated.strip():
                 raise ValueError("Empty translation")
     except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError):
         raise HTTPException(502, "Contextual translation provider failed.")
