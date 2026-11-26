@@ -17,6 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
   <script type="module" src="/static/js/app.js"></script>
+  <script type="module" src="/static/js/activity.js"></script>
 </head>
 <body>
   <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
@@ -114,7 +115,7 @@
       <span class="blob blob--3"></span>
     </div>
 
-    <section class="hero container"><div class="hero-art" aria-hidden="true"><div class="orb-ring orb-ring--one"></div><div class="orb-ring orb-ring--two"></div><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></div>
+    <section class="hero container"><div class="hero-art" aria-hidden="true"><div class="orb-halo"></div><div class="orb-ring orb-ring--one"></div><div class="orb-ring orb-ring--two"></div><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></div>
       <p class="eyebrow">
         <svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="#i-sparkles" /></svg>
         Language Translator
@@ -132,7 +133,7 @@
       </ul>
     </section>
 
-    <section class="container" aria-label="Translator"><div class="workspace-heading"><div><p class="rail-caption">01 / STUDIO</p><h2>Translation workspace</h2></div><span class="workspace-tag">Multi-engine</span></div>
+    <section class="container" aria-label="Translator"><div class="workspace-heading"><div><p class="rail-caption">01 / STUDIO</p><h2>Translation workspace</h2></div><span class="workspace-tag activity-tag" id="studio-activity"><span class="activity-dot" aria-hidden="true"></span><span id="studio-activity-label">Ready</span></span></div>
       <div class="toolbar">
         <button id="multi-toggle" class="switch" type="button" role="switch" aria-checked="false">
           <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
