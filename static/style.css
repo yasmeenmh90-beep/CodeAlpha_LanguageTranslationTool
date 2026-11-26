@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TranslateX — design tokens
+   LINGUA AI — design tokens
    ========================================================================== */
 
 :root {
@@ -13,9 +13,9 @@
   --text-output: 1.25rem; /* 20px */
 
   /* Brand */
-  --brand-1: #7c3aed;
-  --brand-2: #db2777;
-  --brand-mid: #c026d3;
+  --brand-1: #89651c;
+  --brand-2: #d4af37;
+  --brand-mid: #b68c32;
   --brand-gradient: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-mid) 55%, var(--brand-2) 100%);
 
   /* Spacing (4px scale) */
@@ -63,11 +63,11 @@
   --text-2: #3f3b4f;
   --muted: #5f5a71; /* 6.4:1 on white */
   --placeholder: #77728a; /* 4.6:1 on white */
-  --accent: #7c3aed;
-  --accent-text: #6d28d9;
-  --accent-soft: rgba(124, 58, 237, 0.09);
-  --accent-soft-2: rgba(124, 58, 237, 0.16);
-  --focus-ring: #7c3aed;
+  --accent: #89651c;
+  --accent-text: #795719;
+  --accent-soft: rgba(180, 137, 47, 0.09);
+  --accent-soft-2: rgba(180, 137, 47, 0.16);
+  --focus-ring: #89651c;
   --success: #15803d;
   --warn: #b45309;
   --danger: #c81e1e;
@@ -80,60 +80,60 @@
   --skeleton-a: #eeecf4;
   --skeleton-b: #f8f7fc;
   --blob-opacity: 0.42;
-  --grid-dot: rgba(76, 29, 149, 0.1);
+  --grid-dot: rgba(128, 95, 30, 0.1);
   --card-glow-opacity: 0.16;
   /* Hairline card border: brand colour fading into the neutral border. */
-  --ring-gradient: linear-gradient(135deg, rgba(124, 58, 237, 0.55), rgba(219, 39, 119, 0.32) 35%, #e6e4ee 70%);
+  --ring-gradient: linear-gradient(135deg, rgba(180, 137, 47, 0.55), rgba(212, 175, 55, 0.32) 35%, #e6e4ee 70%);
   --glass: rgba(255, 255, 255, 0.72);
 
   --shadow-xs: 0 1px 2px rgba(22, 20, 31, 0.05);
   --shadow-sm: 0 1px 2px rgba(22, 20, 31, 0.04), 0 2px 6px rgba(22, 20, 31, 0.05);
-  --shadow-md: 0 1px 2px rgba(22, 20, 31, 0.04), 0 6px 16px -4px rgba(22, 20, 31, 0.08), 0 16px 32px -12px rgba(76, 29, 149, 0.1);
-  --shadow-lg: 0 2px 4px rgba(22, 20, 31, 0.04), 0 12px 28px -6px rgba(22, 20, 31, 0.12), 0 32px 64px -16px rgba(76, 29, 149, 0.18);
-  --shadow-primary: 0 1px 2px rgba(124, 58, 237, 0.25), 0 6px 16px -4px rgba(219, 39, 119, 0.35);
+  --shadow-md: 0 1px 2px rgba(22, 20, 31, 0.04), 0 6px 16px -4px rgba(22, 20, 31, 0.08), 0 16px 32px -12px rgba(128, 95, 30, 0.1);
+  --shadow-lg: 0 2px 4px rgba(22, 20, 31, 0.04), 0 12px 28px -6px rgba(22, 20, 31, 0.12), 0 32px 64px -16px rgba(128, 95, 30, 0.18);
+  --shadow-primary: 0 1px 2px rgba(180, 137, 47, 0.25), 0 6px 16px -4px rgba(212, 175, 55, 0.35);
 
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0d0c13;
-  --surface: #15131d;
-  --surface-2: #1c1a26;
-  --surface-3: #26232f;
-  --output-bg: #18151f;
-  --border: #2a2737;
-  --border-strong: #3b3749;
-  --text: #f2f0f7;
-  --text-2: #d0ccdc;
-  --muted: #a7a1b9; /* 7.4:1 on surface */
-  --placeholder: #8b859d; /* 5:1 on surface */
-  --accent: #a78bfa;
-  --accent-text: #c4b5fd;
-  --accent-soft: rgba(167, 139, 250, 0.12);
-  --accent-soft-2: rgba(167, 139, 250, 0.2);
-  --focus-ring: #b79cff;
+  --bg: #080808;
+  --surface: #121212;
+  --surface-2: #1c1c1c;
+  --surface-3: #292722;
+  --output-bg: #151411;
+  --border: #383126;
+  --border-strong: #514634;
+  --text: #f5f0e6;
+  --text-2: #ded5c5;
+  --muted: #b7ad9b; /* 7.4:1 on surface */
+  --placeholder: #a49a88; /* 5:1 on surface */
+  --accent: #d4af37;
+  --accent-text: #f5d78e;
+  --accent-soft: rgba(212, 175, 55, 0.12);
+  --accent-soft-2: rgba(212, 175, 55, 0.2);
+  --focus-ring: #f5d78e;
   --success: #4ade80;
   --warn: #fbbf24;
   --danger: #f87171;
   --danger-soft: rgba(248, 113, 113, 0.1);
   --danger-border: rgba(248, 113, 113, 0.28);
   --star: #fbbf24;
-  --tooltip-bg: #f2f0f7;
+  --tooltip-bg: #f5f0e6;
   --tooltip-text: #16141f;
-  --header-bg: rgba(13, 12, 19, 0.7);
+  --header-bg: rgba(8, 8, 8, 0.7);
   --skeleton-a: #211e2b;
   --skeleton-b: #2c2838;
   --blob-opacity: 0.3;
-  --grid-dot: rgba(196, 181, 253, 0.08);
+  --grid-dot: rgba(245, 215, 142, 0.08);
   --card-glow-opacity: 0.28;
-  --ring-gradient: linear-gradient(135deg, rgba(167, 139, 250, 0.7), rgba(236, 72, 153, 0.4) 35%, #2a2737 70%);
-  --glass: rgba(21, 19, 29, 0.6);
+  --ring-gradient: linear-gradient(135deg, rgba(212, 175, 55, 0.7), rgba(245, 215, 142, 0.4) 35%, #383126 70%);
+  --glass: rgba(18, 18, 18, 0.6);
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -6px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 32px 80px -24px rgba(124, 58, 237, 0.22);
-  --shadow-primary: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -6px rgba(219, 39, 119, 0.45);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 32px 80px -24px rgba(180, 137, 47, 0.22);
+  --shadow-primary: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -6px rgba(212, 175, 55, 0.45);
 
   color-scheme: dark;
 }
@@ -577,7 +577,7 @@ kbd {
 .brand__mark {
   width: 32px;
   height: 32px;
-  filter: drop-shadow(0 4px 10px rgba(124, 58, 237, 0.3));
+  filter: drop-shadow(0 4px 10px rgba(180, 137, 47, 0.3));
 }
 .brand__name {
   font-family: var(--font-display);
@@ -1679,7 +1679,7 @@ kbd {
   animation: pop-in var(--dur) var(--ease);
 }
 .modal::backdrop {
-  background: rgba(13, 12, 19, 0.45);
+  background: rgba(8, 8, 8, 0.45);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
@@ -1945,10 +1945,10 @@ kbd {
 }
 @keyframes listen-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.45);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.45);
   }
   100% {
-    box-shadow: 0 0 0 12px rgba(219, 39, 119, 0);
+    box-shadow: 0 0 0 12px rgba(212, 175, 55, 0);
   }
 }
 
@@ -2470,6 +2470,16 @@ kbd {
   }
   .mic-btn.is-listening {
     animation: none !important;
-    box-shadow: 0 0 0 3px rgba(219, 39, 119, 0.35);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.35);
   }
 }
+
+/* LINGUA AI: champagne-metal design foundation */
+:root { --brand-gradient: linear-gradient(120deg,#b68c32,#f5d78e 52%,#b68c32); --bg:#f8f5ee; --surface-2:#f4efe5; --surface-3:#ebe4d6; --output-bg:#fcfaf5; --border:#e4dccb; --border-strong:#cfc2aa; }
+:root[data-theme="dark"] { --bg:#080808; --surface-2:#1c1c1c; --surface-3:#292722; --output-bg:#151411; --border:#383126; --border-strong:#514634; --skeleton-a:#252119; --skeleton-b:#373023; }
+.btn--primary { color:#171107; }
+.btn--primary .spinner { border-color:rgba(23,17,7,.25); border-top-color:#171107; }
+.btn--primary .btn__kbd { color:#171107; background:rgba(0,0,0,.08); border-color:rgba(0,0,0,.24); }
+.hero__title { letter-spacing:-.045em; }
+.brand__name { letter-spacing:.08em; }
+@media (prefers-reduced-motion: no-preference) { .hero { animation: lingua-enter .65s ease-out both; } @keyframes lingua-enter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } } }
