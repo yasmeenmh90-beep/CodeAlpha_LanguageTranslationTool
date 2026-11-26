@@ -5,10 +5,10 @@
   try {
     theme = JSON.parse(localStorage.getItem("tx:theme"));
   } catch (e) {
-    /* storage unavailable or malformed — fall through to system preference */
+    /* storage unavailable or malformed — fall through to default dark theme */
   }
   if (theme !== "light" && theme !== "dark") {
-    theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    theme = "dark";
   }
   document.documentElement.setAttribute("data-theme", theme);
 })();
