@@ -2585,3 +2585,11 @@ kbd {
 .advanced-form .dna-opt {display:flex;align-items:center;gap:10px;}
 @media(prefers-reduced-motion:no-preference){#dna-helix svg {animation:lingua-reveal .6s ease-out both;}}
 @media(max-width:640px){.dna-panel {grid-template-columns:1fr;}#dna-helix svg {max-height:180px;}}
+
+#learning-library {display:grid;gap:10px;max-height:360px;overflow:auto;margin:16px 0;}
+#learning-library article {padding:14px;border:1px solid var(--border);border-radius:12px;overflow-wrap:anywhere;}
+#learning-library small {display:block;margin:8px 0;}
+#learning-review {margin:16px 0;border:1px solid #967338;border-radius:16px;padding:20px;}
+#learning-review p {overflow-wrap:anywhere;}
+#learning-metrics {margin:16px 0;}
+#learning-metrics p {overflow-wrap:anywhere;}
