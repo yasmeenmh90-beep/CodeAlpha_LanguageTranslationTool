@@ -295,3 +295,7 @@ There are 46 tests. All HTTP calls are mocked with `respx`, and the `requests`-b
 ## LINGUA AI multimodal studio
 
 Install the updated Python requirements. For English image OCR on macOS, install Tesseract with `brew install tesseract`. OCR runs on the application server, not in the browser. PDF extraction supports text-based PDFs, not scanned PDFs; DOCX extraction returns plain body text, not original layout. Uploads are limited to 5 MB and extracted text to 5000 characters. Review extracted text before transferring it into the translator, which may automatically send it to external translation providers. Browser speech recognition may use a remote browser speech service. The microphone level meter uses local audio samples and requires a secure browser context (localhost or HTTPS). Conversation turns are held in the current page only.
+
+## Learning and analytics
+
+Save up to 500 local flashcards. Remembered cards recur after 1 day, then doubling intervals up to 90 days; missed cards recur after 10 minutes. Review scheduling is a simple heuristic, not a validated adaptive learning model. Analytics records up to 1,000 standard-workspace outcomes, including provider, target, cache status and available client request duration; batch target timing is omitted. Advanced and conversation modes are not included. Analytics contains no source or translation text, but saved flashcards do. Data is browser-local, may be cleared by browser settings, and is not synchronized. JSON export and analytics reset are available in the learning workspace.
