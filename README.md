@@ -1,301 +1,240 @@
-# Language Translation Tool — CodeAlpha AI Internship (Task 1)
+<div align="center">
 
-A web app where you enter text, choose source and target languages, and get the translation from a real translation API. The result can be copied or read aloud.
+# ✦ LINGUA AI
 
-## Features
+### Intelligent Multilingual Communication Studio
 
-**Translation engine**
-- **Fallback chain**: Microsoft Translator → Google Cloud → MyMemory → Google (free web). Each engine is used only if it's configured. On a rate limit, 5xx or network error the engine is retried once, then the next one is tried
-- Works with **no API keys**: MyMemory's free API answers out of the box
-- **Engine menu** in the header: Auto (chain) or one specific engine. A green dot means the engine is configured, a grey dot means it isn't (with the env var it needs). Your choice is remembered
-- **In-memory LRU cache** (500 entries by default): repeated translations don't call the API again and are marked "cached"
-- When every engine fails, you get a clear error listing what each one said ("Tried: Microsoft → Google Cloud → MyMemory")
-- Up to 5,000 characters, 25 languages. Long text is split automatically for MyMemory's 500-byte request limit
+*Beyond words. Beyond borders.*
 
-**Translation**
-- **Auto-detect** the source language. The result shows as a "Detected: English" badge, in the picker label ("English — detected"), and with a confidence score in the result row
-- **Translate as you type** (600 ms debounce) plus a Translate button and `Ctrl/⌘ + Enter`. Stale requests are cancelled with `AbortController`, so an older response never overwrites a newer one
-- **Result details**: engine used, "cached" chip, response time in ms, detected language and confidence, and which engines were tried if a fallback happened
-- **Alternatives** from MyMemory's translation memory, filtered so they're actually in the target language
-- **Translate to multiple languages**: switch on the toggle, pick up to 5 target languages, and get one card per language (each with Copy and Listen)
-- **Roman Urdu / Hindi**: type "kia hal hai" with source Urdu (or let auto-detect spot it) and the app offers "Translate as Urdu?". When this is on, the text goes to engines whose auto-detect can read romanized text (Google, Microsoft, free Google), and the result is labelled "from Roman Urdu". MyMemory can't do this, and the app says so instead of returning a bad translation
-- **Voice input**: microphone button (Web Speech API) in the source language, with an animated listening state. `Esc` stops it. The button is hidden in browsers without speech recognition
-- **File translation**: drag and drop or upload a `.txt` file (≤ 5,000 characters). The download keeps the file's name (`notes.txt` → `notes-fr.txt`)
-- **Share link**: copies a URL with `?text=&from=&to=`. Opening it fills in the translator
+![Python](https://img.shields.io/badge/Python-3.12%2B-D4AF37?style=for-the-badge&logo=python&logoColor=white&labelColor=080808)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-D4AF37?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=080808)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-D4AF37?style=for-the-badge&logo=javascript&logoColor=white&labelColor=080808)
+![CI](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/actions/workflows/ci.yml/badge.svg)
 
-**Language selection**
-- Searchable, keyboard-accessible language picker (ARIA combobox): "Detect language" pinned first, a recently used section, then the full list
-- Quick-pick chips for recently used languages above each pane
-- Swap button that rotates 180° and swaps both languages and the text pair
-- Text direction follows the **script you actually type**: Arabic-script text is right-to-left, Latin text (including romanized Urdu) is always left-to-right
-- Last-used source, target and engine are remembered
+**25 languages · 4 translation engines · 7 focused workspaces**
 
-**Working with results**
-- Icon actions with tooltips: **Listen** (text-to-speech with an animated "speaking" state; click again to stop), **Copy** (icon turns into a check mark), **Download as .txt**, **Star**
-- Text-to-speech for the input text too
-- Text box grows with the content. The character counter turns amber at 90% and red at 100%. Spellcheck and grammar-extension overlays are turned off in the text box
-- Shimmer skeleton while loading, and the button shows a spinner and is disabled during the request
-- Error banner inside the output pane with a **Retry** button. Common failures (offline, provider not configured, API key rejected, text too long) get a plain-language message, and the backend's own detail is shown below it
+[Explore features](#workspaces) · [Quick start](#quick-start) · [Architecture](#architecture) · [API reference](#api-reference) · [Testing](#testing)
 
-**History & favorites**
-- Last 20 translations saved in `localStorage`, shown as cards with relative times ("2 min ago")
-- Click a card to restore it. Delete single items, or "Clear all" (with Undo)
-- **Recent** and **Starred** tabs. Starred items stay when the history rolls over
-- When you translate as you type, the steps of the same sentence are merged into one history entry
+**CodeAlpha — Artificial Intelligence Internship / Task 01**
 
-**Interface**
-- Light and dark themes. The first load follows the system setting, and your choice is saved
-- Responsive layout (375 px → 1600 px+). On phones the panes stack under a single language row
-- Toast notifications (top-right, stacked, auto-dismiss, success/error/info)
-- Keyboard shortcuts: `Ctrl/⌘ + Enter` translate, `Ctrl/⌘ + Shift + S` swap, `Ctrl/⌘ + Shift + C` copy, `Esc` closes menus and stops voice input, `?` opens the shortcuts dialog
-- Accessibility: semantic HTML, labels on every control, visible focus rings, `aria-live` output, AA contrast in both themes, and `prefers-reduced-motion` support
-- Plain HTML/CSS/JavaScript ES modules: no framework, no build step. All user text is rendered with `textContent`, never `innerHTML`
+</div>
 
-## Screenshots
+---
 
-| Light | Dark |
+## Overview
+
+LINGUA AI evolves a traditional language translation tool into a modular communication studio. It combines real translation providers, optional contextual AI and multi-agent review, document extraction, speech tools, evidence-based translation checks and personal vocabulary practice.
+
+The minimal Black & Gold interface uses a compact navigation rail, animated globe, state-driven feedback and focused workspaces instead of a single long dashboard. Dark mode is the default; light mode and reduced-motion preferences remain supported.
+
+## Workspaces
+
+| Workspace | Capabilities |
 |---|---|
-| ![TranslateX in light mode](docs/screenshot-light.png) | ![TranslateX in dark mode](docs/screenshot-dark.png) |
+| **Translation Studio** | Automatic language detection, live translation, up to five target languages, Roman Urdu/Hindi support, engine selection, speech input and playback, copy, download and sharing |
+| **Advanced Intelligence** | Side-by-side provider comparison, contextual translation, tone and style selection, optional four-stage AI review |
+| **Multimodal Studio** | TXT, DOCX, text-based PDF and English image OCR; turn-by-turn conversation and microphone level meter |
+| **Translation DNA** | Numeric tokens, URLs, placeholders, unchanged text and required terminology checks; optional back translation |
+| **Learning & Analytics** | Local flashcards, spaced reviews, actual recorded translation outcomes, provider/language frequencies and JSON export |
+| **Translation Library** | Recent translations, favorites, restoration, deletion and undo |
+| **Workspace Guide** | Built-in usage guidance |
 
-> Placeholder images. Add `docs/screenshot-light.png` and `docs/screenshot-dark.png`.
+> The latest interface uses hash-based workspace navigation and retains existing controls in the DOM. Current screenshots will be added after browser verification.
 
-## Tech stack
+## Architecture
 
-| Layer | Tools |
-|---|---|
-| Backend | Python, FastAPI, httpx, Pydantic |
-| Frontend | HTML, CSS, vanilla JavaScript |
-| Translation | Microsoft Translator v3 / Google Cloud Translation v2 / MyMemory / deep-translator |
-| Speech | Web Speech API (`speechSynthesis` for listening, `SpeechRecognition` for voice input) |
-| Tests | pytest, respx (mocked API calls) |
-
-## Project structure
-
-```
-CodeAlpha_LanguageTranslationTool/
-├── app/
-│   ├── main.py          # FastAPI app and API routes
-│   ├── translators.py   # Providers, fallback chain, retry, LRU cache
-│   ├── detect.py        # Offline language/script detection (incl. Roman Urdu)
-│   └── languages.py     # Supported languages
-├── static/
-│   ├── index.html       # Markup + inline SVG icon sprite
-│   ├── style.css        # Design tokens, light/dark themes, layout
-│   └── js/
-│       ├── app.js       # Entry point: state, translate flow, events
-│       ├── api.js       # Backend client + friendly error mapping
-│       ├── picker.js    # Searchable language combobox (single + multi-select)
-│       ├── engine.js    # Engine dropdown with status dots
-│       ├── voice.js     # Voice input (SpeechRecognition)
-│       ├── history.js   # History / starred cards
-│       ├── speech.js    # Text-to-speech
-│       ├── toast.js     # Toast notifications
-│       ├── storage.js   # localStorage helpers
-│       ├── dom.js       # DOM helpers (textContent only)
-│       └── theme-init.js # Applies the theme before first paint
-├── tests/
-│   ├── conftest.py      # Isolated env, no backoff, free provider blocked
-│   ├── test_api.py      # Original API tests
-│   └── test_engines.py  # Chain, cache, detect, batch, MyMemory, Roman Urdu
-├── requirements.txt
-└── .env.example
+```mermaid
+flowchart TD
+    U["Black & Gold browser workspace"] --> A["FastAPI / request guard"]
+    U --> L["Browser-local history, vocabulary and metrics"]
+    A --> T["Translation & language detection"]
+    T --> C["In-memory LRU cache"]
+    T --> P["Microsoft / Google / MyMemory / free web"]
+    A --> AI["Optional contextual AI"]
+    AI --> M["Analyst → Translator → Reviewer → Finalizer"]
+    A --> D["Document extraction & OCR"]
+    A --> Q["Translation DNA checks"]
+    Q --> T
+    U --> S["Browser speech APIs"]
 ```
 
-## Setup
-
-```bash
-git clone https://github.com/<your-username>/CodeAlpha_LanguageTranslationTool.git
-cd CodeAlpha_LanguageTranslationTool
-
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-source .venv/bin/activate
-
-pip install -r requirements.txt
-cp .env.example .env        # Windows: copy .env.example .env
-```
-
-### Choose translation engines (edit `.env`)
-
-**Nothing to configure for a demo.** With no keys, the chain is MyMemory → Google (free web). Add keys to put the better engines first. Every variable is listed in [`.env.example`](.env.example):
-
-| Variable | Purpose |
-|---|---|
-| `TRANSLATOR_PROVIDER` | Empty = fallback chain (recommended). `microsoft` / `google` / `mymemory` / `free` = use only that engine by default |
-| `AZURE_TRANSLATOR_KEY`, `AZURE_TRANSLATOR_REGION` | Microsoft Translator |
-| `GOOGLE_API_KEY` | Google Cloud Translation |
-| `MYMEMORY_EMAIL` | Optional. Raises MyMemory's free daily quota |
-| `CACHE_SIZE` | LRU cache entries (default 500, `0` = off) |
-| `REQUEST_TIMEOUT` | Seconds per provider attempt (default 15) |
-
-### Engine chain
+### Translation engine strategy
 
 ```mermaid
 flowchart LR
-    R["POST /api/translate"] --> C{"In LRU cache?"}
-    C -- yes --> H["Return cached result"]
-    C -- no --> M["Microsoft Translator<br/>(if AZURE_TRANSLATOR_KEY)"]
-    M -- "fails" --> G["Google Cloud<br/>(if GOOGLE_API_KEY)"]
-    G -- "fails" --> Y["MyMemory<br/>(free, no key)"]
-    Y -- "fails" --> F["Google free web<br/>(deep-translator)"]
-    F -- "fails" --> E["502: every engine's reason"]
-    M & G & Y & F -- "success" --> S["Cache + return result,<br/>provider, providers_tried"]
+    R["Request"] --> C{"Cache hit?"}
+    C -->|Yes| O["Result"]
+    C -->|No| M["Microsoft"]
+    M -->|Unavailable / fails| G["Google Cloud"]
+    G -->|Unavailable / fails| Y["MyMemory"]
+    Y -->|Fails| F["Free web"]
+    F -->|Fails| E["Structured error"]
+    M -->|Success| O
+    G -->|Success| O
+    Y -->|Success| O
+    F -->|Success| O
 ```
 
-Text version: `cache → microsoft → google → mymemory → free → 502`. Rate limits (429), 5xx and network errors get **one retry** with a short backoff before the next engine. Other errors (such as a bad key) move on straight away. Picking a specific engine in the UI, or with `"provider"` in the API, uses only that engine, with no silent fallback.
+Auto mode skips unconfigured providers. Transient errors receive a bounded retry; explicitly selected engines do not silently fall back. Free services are quota-limited and may be unreliable.
 
-### How to get a free Microsoft Translator key
+## Technology stack
 
-The F0 tier is free for 2 million characters a month and needs an Azure account (a card is required for sign-up, but F0 is not charged).
+| Layer | Technology |
+|---|---|
+| Backend | Python, FastAPI, Pydantic, httpx |
+| Frontend | HTML5, CSS3, vanilla JavaScript ES modules, SVG |
+| Translation | Microsoft Translator, Google Cloud, MyMemory, deep-translator |
+| Optional AI | OpenAI Chat Completions API |
+| Documents | pypdf, defusedxml, Pillow, pytesseract |
+| Speech | Web Speech API, Web Audio API |
+| Persistence | Browser localStorage, server in-memory cache |
+| Quality | pytest, respx, GitHub Actions, Node.js syntax checks |
 
-1. Sign in at <https://portal.azure.com> (or create a free account at <https://azure.microsoft.com/free>).
-2. Click **Create a resource**, search for **Translator**, and click **Create**.
-3. Fill in the form:
-   - **Subscription**: your subscription. **Resource group**: create one, e.g. `translator-rg`.
-   - **Region**: pick one near you (e.g. `West Europe`), or **Global**.
-   - **Name**: any unique name. **Pricing tier**: **Free F0**.
-4. Click **Review + create**, then **Create**, and wait for the deployment to finish. Then click **Go to resource**.
-5. Open **Keys and Endpoint**. Copy **Key 1** and the **Location/Region** value.
-6. In `.env`, set:
-   ```env
-   AZURE_TRANSLATOR_KEY=<Key 1>
-   AZURE_TRANSLATOR_REGION=<Location/Region, e.g. westeurope or global>
-   ```
-7. Restart the server. The engine menu now shows Microsoft Translator with a green dot, and it is first in the Auto chain.
+## Quick start
 
-### Google Cloud Translation key
-
-1. In Google Cloud Console, enable *Cloud Translation API* (billing must be enabled; there is a monthly free allowance).
-2. Create an API key under *APIs & Services → Credentials*, and ideally restrict it to the Translation API.
-3. Set `GOOGLE_API_KEY=...` in `.env`.
-
-## Run
+Python 3.12+ is recommended. Node.js is only needed for JavaScript validation. No frontend build step or Docker is required.
 
 ```bash
-uvicorn app.main:app --reload
+git clone https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool.git
+cd CodeAlpha_LanguageTranslationTool
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
-Open http://127.0.0.1:8000. Interactive API docs are at http://127.0.0.1:8000/docs.
+Windows activation: `.venv\\Scripts\\activate`. Copy the environment template with `copy .env.example .env`.
 
-## API
+| Resource | Address |
+|---|---|
+| Application | http://127.0.0.1:8000 |
+| Interactive API docs | http://127.0.0.1:8000/docs |
 
-| Method | Endpoint | Description |
+For English image OCR on macOS:
+
+```bash
+brew install tesseract
+tesseract --version
+```
+
+### Configuration
+
+Basic translation works without paid API keys, subject to free-provider availability. Configure optional credentials in the server-side `.env` file; never commit secrets.
+
+| Variable | Purpose |
+|---|---|
+| `TRANSLATOR_PROVIDER` | Default provider; empty uses automatic fallback |
+| `AZURE_TRANSLATOR_KEY`, `AZURE_TRANSLATOR_REGION` | Microsoft Translator |
+| `GOOGLE_API_KEY` | Google Cloud Translation |
+| `MYMEMORY_EMAIL` | Optional MyMemory quota configuration |
+| `CACHE_SIZE` | LRU capacity; 0 disables cache |
+| `REQUEST_TIMEOUT` | Provider attempt timeout |
+| `OPENAI_API_KEY` | Optional contextual AI credential |
+| `LINGUA_AI_MODEL` | Compatible configured chat model |
+| `LINGUA_AGENTIC_ENABLED` | Set to 1 to enable four-call review; default 0 |
+
+See [the environment template](.env.example). Optional AI calls may incur charges.
+
+## API reference
+
+| Method | Endpoint | Function |
 |---|---|---|
-| GET | `/api/health` | Status, default engine and which engines are configured |
-| GET | `/api/languages` | Supported language codes and names |
-| GET | `/api/providers` | Engines with label, `configured` flag and required env var; the active chain |
-| POST | `/api/translate` | Translate text (optional `provider`, `romanized`) |
-| POST | `/api/translate/batch` | Translate into up to 5 target languages at once |
-| POST | `/api/detect` | Offline language/script detection |
+| GET | `/api/health` | Health and configured engines |
+| GET | `/api/languages` | Supported languages |
+| GET | `/api/providers` | Provider availability and fallback chain |
+| GET | `/api/advanced/capabilities` | Optional AI availability |
+| POST | `/api/detect` | Language/script detection |
+| POST | `/api/translate` | Standard translation |
+| POST | `/api/translate/batch` | Multiple target languages |
+| POST | `/api/translate/compare` | Explicit provider comparison |
+| POST | `/api/translate/contextual` | Context, tone and style |
+| POST | `/api/translate/agentic` | Reviewed four-stage translation |
+| POST | `/api/extract/{kind}` | Bounded raw file extraction |
+| POST | `/api/translation-dna` | Evidence-based checks and optional back translation |
 
-Errors use `{"detail": "..."}`. Validation errors (422) return `detail` as a list. When the engines fail (502), the response also includes `providers_tried` and `errors: [{provider, label, reason}]`.
-
-**Translate** (`provider`: `"auto"` or an engine name; `romanized`: treat Latin text as Roman Urdu/Hindi):
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/translate \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Where is the train station?", "source": "auto", "target": "fr", "provider": "auto"}'
-```
-
-```json
-{
-  "translated_text": "Où est la gare ?",
-  "source": "auto",
-  "target": "fr",
-  "detected_source": "en",
-  "provider": "mymemory",
-  "providers_tried": ["mymemory"],
-  "cached": false,
-  "alternatives": ["Où est la gare?", "Où se trouve la gare"],
-  "detected_confidence": 0.52,
-  "detection_method": "heuristic",
-  "romanized": false,
-  "suggest_romanized": false,
-  "warnings": []
-}
-```
-
-**Engines:**
+Example:
 
 ```bash
-curl http://127.0.0.1:8000/api/providers
+curl -X POST http://127.0.0.1:8000/api/translate \\
+  -H "Content-Type: application/json" \\
+  -d '{"text":"Where is the train station?","source":"auto","target":"fr","provider":"auto"}'
 ```
 
-```json
-{
-  "default": "auto",
-  "chain": ["mymemory", "free"],
-  "providers": [
-    {"name": "microsoft", "label": "Microsoft Translator", "configured": false, "requires": "AZURE_TRANSLATOR_KEY"},
-    {"name": "google", "label": "Google Cloud Translation", "configured": false, "requires": "GOOGLE_API_KEY"},
-    {"name": "mymemory", "label": "MyMemory", "configured": true, "requires": null},
-    {"name": "free", "label": "Google (free web)", "configured": true, "requires": null}
-  ]
-}
+The result contains translation text, provider, detected language, cache status and available warnings. Provider outputs may vary.
+
+## Project structure
+
+```text
+app/
+  main.py           API endpoints and validation
+  translators.py    Provider adapters, fallback and cache
+  detect.py         Language and script heuristics
+  languages.py      Supported language catalog
+  agents.py         Four-stage AI orchestration
+  documents.py      Text extraction and OCR
+  dna.py            Deterministic translation checks
+  security.py       Request guards and response headers
+static/
+  index.html        Seven-workspace interface
+  style.css         Black & Gold design and responsive motion
+  js/               Browser modules
+    workspace.js    Workspace navigation
+    app.js          Main translation workflow
+    advanced.js     Advanced translation UI
+    multimodal.js   Documents and conversation
+    dna.js          Translation DNA visualization
+    learning.js     Flashcards and analytics
+    learning-data.js  Local learning and usage storage
+    activity.js     State-driven visual feedback
+tests/              API, providers, agents, DNA, documents, security
+.github/workflows/ci.yml
+requirements.txt
+.env.example
 ```
 
-**Batch** (max 5 targets; duplicates are removed; each target succeeds or fails independently):
+## Testing
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/translate/batch \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Good morning", "source": "en", "targets": ["fr", "es"]}'
+python -m pytest -q
+python -m compileall -q app tests
+python -m pip check
+for file in static/js/*.js; do
+  node --input-type=module --check < "$file" || exit 1
+done
 ```
 
-```json
-{
-  "source": "en",
-  "results": [
-    {"target": "fr", "ok": true, "result": {"translated_text": "Bonjour", "provider": "mymemory", "...": "..."}, "error": null},
-    {"target": "es", "ok": true, "result": {"translated_text": "Buenos días", "provider": "mymemory", "...": "..."}, "error": null}
-  ]
-}
-```
+| Recorded verification | Result |
+|---|---|
+| Backend suite before compact navigation redesign | 61 passed in 0.72 seconds |
+| JavaScript syntax before redesign | 17 modules checked |
+| OCR engine on development Mac | Tesseract 5.5.4 installed |
 
-**Detect** (an offline heuristic: Unicode script blocks plus stop-word scoring; it also flags romanized Urdu):
+GitHub Actions runs backend tests and module syntax checks. See [current workflow results](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/actions). Latest compact UI browser testing, isolated dependency verification and live AI provider validation remain pending. The previous shared Anaconda environment reported unrelated package conflicts; use the isolated virtual environment above.
 
-```bash
-curl -X POST http://127.0.0.1:8000/api/detect \
-  -H "Content-Type: application/json" \
-  -d '{"text": "mujhe pani chahiye"}'
-```
+## Security, privacy & limitations
 
-```json
-{"language": "ur", "name": "Urdu", "confidence": 0.99, "script": "Latin", "romanized": true, "method": "heuristic"}
-```
+- Request guard: 60 POST API requests per minute per client IP, 16 concurrent guarded requests per process, 128 KiB JSON/body limit and 5 MiB extraction limit. Security response headers are enabled.
+- Credentials remain server-side. Before public deployment, add authentication, gateway-level shared rate limiting, spending controls and hardened file processing.
+- Translation and optional AI providers receive submitted text. Browser speech recognition may use a remote speech service. The audio level meter uses local microphone samples.
+- Extraction supports UTF-8 TXT, DOCX body text, text-based PDFs (up to 20 pages) and English PNG/JPEG OCR, with a 5,000-character extracted-text limit. Scanned PDFs and original document layout are not supported.
+- Translation DNA provides literal evidence checks, not calibrated semantic accuracy scores. Agent roles use the same configured model, and review is not independent verification.
+- Learning uses simple review intervals (1 day, doubling up to 90 days; missed cards return after 10 minutes). Up to 500 flashcards and 1,000 standard-workspace analytics outcomes are stored locally. Analytics excludes original text, advanced and conversation modes; saved flashcards and history do contain text.
+- Browser data is not cloud-synchronized. Share URLs can include source text; avoid sharing confidential content.
+- Conversation is turn-based, not simultaneous interpretation. Free translation providers and browser speech availability vary.
 
-## Tests
+## Development status
 
-```bash
-pytest -q
-```
+Core workspaces, compact navigation, security guard and CI configuration are published on `main`. Final browser smoke tests, live integration checks and updated screenshots are outstanding.
 
-There are 46 tests. All HTTP calls are mocked with `respx`, and the `requests`-based free provider is blocked in `conftest.py`, so the tests never touch the network. They cover:
-- validation
-- each provider's request and response handling
-- the fallback chain (429 → next engine, retry once, no retry on 403, pinned engines don't fall back)
-- the 502 listing every engine's reason
-- cache hits and LRU eviction
-- `/api/providers`, `/api/detect` and `/api/translate/batch` (including the >5-targets 422)
-- MyMemory parsing (entities, alternatives, wrong-language matches, quota, chunking)
-- HTML-entity decoding
-- Roman Urdu
+---
 
-## Notes
+<div align="center">
 
-- **MyMemory** is a translation memory plus machine translation. Quality varies, and its anonymous quota is about 5,000 characters a day (more with `MYMEMORY_EMAIL`). For real use, add a Microsoft or Google key.
-- **Google (free web)** uses an unofficial endpoint that often rate-limits servers. It's the last resort in the chain.
-- **Language detection** for engines that don't report it (MyMemory, free Google) uses the offline heuristic in `app/detect.py`, and is labelled `"detection_method": "heuristic"`.
-- **Voice input** uses the browser's speech recognition. Chrome sends the audio to Google's servers, so it needs a connection. Firefox doesn't support it, so the mic button is hidden there.
-- Text-to-speech uses the voices installed on your device. Chrome and Edge have the widest language coverage.
-- API keys stay on the server and are never sent to the browser.
+**LINGUA AI** · Built for the CodeAlpha AI Internship
 
+*Language without boundaries.*
 
-## LINGUA AI multimodal studio
+[Repository](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool) · [Report an issue](https://github.com/yasmeenmh90-beep/CodeAlpha_LanguageTranslationTool/issues)
 
-Install the updated Python requirements. For English image OCR on macOS, install Tesseract with `brew install tesseract`. OCR runs on the application server, not in the browser. PDF extraction supports text-based PDFs, not scanned PDFs; DOCX extraction returns plain body text, not original layout. Uploads are limited to 5 MB and extracted text to 5000 characters. Review extracted text before transferring it into the translator, which may automatically send it to external translation providers. Browser speech recognition may use a remote browser speech service. The microphone level meter uses local audio samples and requires a secure browser context (localhost or HTTPS). Conversation turns are held in the current page only.
-
-## Learning and analytics
-
-Save up to 500 local flashcards. Remembered cards recur after 1 day, then doubling intervals up to 90 days; missed cards recur after 10 minutes. Review scheduling is a simple heuristic, not a validated adaptive learning model. Analytics records up to 1,000 standard-workspace outcomes, including provider, target, cache status and available client request duration; batch target timing is omitted. Advanced and conversation modes are not included. Analytics contains no source or translation text, but saved flashcards do. Data is browser-local, may be cleared by browser settings, and is not synchronized. JSON export and analytics reset are available in the learning workspace.
+</div>
