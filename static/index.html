@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TranslateX — Language Translator</title>
+  <meta name="description" content="TranslateX is a fast, accessible language translator with auto-detect, text-to-speech, history and favorites." />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f7f7fb" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C3AED'/%3E%3Cstop offset='1' stop-color='%23DB2777'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M8 7h11a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6l-4 3.5V19H8a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3z' fill='white' fill-opacity='.55'/%3E%3Cpath d='M15 13h9a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-.5v3L20 24h-5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3z' fill='white'/%3E%3C/svg%3E" />
+
+  <!-- Apply saved / system theme before first paint. -->
+  <script src="/static/js/theme-init.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <script type="module" src="/static/js/app.js"></script>
+</head>
+<body>
+  <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="brand-gradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#7C3AED" />
+        <stop offset="1" stop-color="#DB2777" />
+      </linearGradient>
+    </defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4" /><path d="M4 7h16" /><path d="m16 21 4-4-4-4" /><path d="M20 17H4" /></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></symbol>
+    <symbol id="i-alert-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" /></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" /></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M19 10v1a7 7 0 0 1-14 0v-1" /><path d="M12 18v4" /></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" /></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7l10-5z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14" /><path d="M5 12h14" /></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m17 8-5-5-5 5" /><path d="M12 3v12" /></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" /></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10" /></symbol>
+  </svg>
+
+  <a class="skip-link" href="#input">Skip to translator</a>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/" aria-label="TranslateX home">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="9" fill="url(#brand-gradient)" />
+          <path d="M8 7h11a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6l-4 3.5V19H8a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3z" fill="#fff" fill-opacity=".55" />
+          <path d="M15 13h9a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-.5v3L20 24h-5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3z" fill="#fff" />
+        </svg>
+        <span class="brand__name">Translate<span class="brand__x">X</span></span>
+      </a>
+
+      <nav class="topbar__actions" aria-label="App settings">
+        <div class="engine" id="engine-root">
+          <button id="engine-btn" class="engine-pill" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="engine-list" disabled>
+            <svg class="icon icon--sm engine-pill__icon" aria-hidden="true" focusable="false"><use href="#i-zap" /></svg>
+            <span class="engine-pill__label">Auto</span>
+            <svg class="icon icon--xs engine-pill__chevron" aria-hidden="true" focusable="false"><use href="#i-chevron-down" /></svg>
+          </button>
+          <ul id="engine-list" class="engine-menu" role="listbox" aria-label="Translation engine" tabindex="-1" hidden></ul>
+        </div>
+
+        <button id="shortcuts-btn" class="btn btn--ghost btn--sm shortcuts-btn" type="button" aria-haspopup="dialog" aria-label="Keyboard shortcuts">
+          <kbd data-mod>⌘</kbd><span class="hide-sm">Shortcuts</span>
+        </button>
+
+        <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch to dark theme" data-tooltip="Dark theme" data-tooltip-pos="bottom">
+          <svg class="icon theme-icon theme-icon--moon" aria-hidden="true" focusable="false"><use href="#i-moon" /></svg>
+          <svg class="icon theme-icon theme-icon--sun" aria-hidden="true" focusable="false"><use href="#i-sun" /></svg>
+        </button>
+
+        <a class="icon-btn" href="#" aria-label="View source code on GitHub" data-tooltip="GitHub" data-tooltip-pos="bottom" data-tooltip-align="end">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github" /></svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="backdrop" aria-hidden="true">
+      <span class="blob blob--1"></span>
+      <span class="blob blob--2"></span>
+      <span class="blob blob--3"></span>
+    </div>
+
+    <section class="hero container">
+      <p class="eyebrow">
+        <svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="#i-sparkles" /></svg>
+        Language Translator
+        <span class="eyebrow__sep" aria-hidden="true"></span>
+        <span class="eyebrow__muted">4 engines · 25 languages</span>
+      </p>
+      <h1 class="hero__title">Say it in any language, <span class="grad-text grad-text--animated">instantly.</span></h1>
+      <p class="hero__sub">Translate between 25 languages with auto-detect, text-to-speech, and a history that remembers your work.</p>
+      <ul class="hero__features" aria-label="Highlights">
+        <li><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-zap" /></svg>Works without API keys</li>
+        <li><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-mic" /></svg>Voice input</li>
+        <li><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-layers" /></svg>Up to 5 languages at once</li>
+        <li><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-paperclip" /></svg>.txt files</li>
+        <li><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-globe" /></svg>Roman Urdu</li>
+      </ul>
+    </section>
+
+    <section class="container" aria-label="Translator">
+      <div class="toolbar">
+        <button id="multi-toggle" class="switch" type="button" role="switch" aria-checked="false">
+          <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+          <svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-layers" /></svg>
+          Translate to multiple
+        </button>
+      </div>
+      <div class="translator card" id="translator">
+        <!-- Source language bar -->
+        <div class="langbar langbar--source" id="source-bar">
+          <button class="lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="source-popover">
+            <span class="lang-trigger__label">Detect language</span>
+            <svg class="icon icon--sm lang-trigger__chevron" aria-hidden="true" focusable="false"><use href="#i-chevron-down" /></svg>
+          </button>
+          <div class="chips" role="group" aria-label="Recent source languages"></div>
+          <div class="picker" id="source-popover" hidden>
+            <div class="picker__search">
+              <svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-search" /></svg>
+              <input class="picker__input" type="text" role="combobox" aria-expanded="false" aria-controls="source-listbox"
+                     aria-autocomplete="list" aria-label="Search source languages" placeholder="Search languages"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="picker__list" id="source-listbox" role="listbox" aria-label="Source languages"></div>
+          </div>
+        </div>
+
+        <!-- Swap -->
+        <div class="swap-wrap">
+          <button id="swap" class="swap-btn" type="button" aria-label="Swap languages" data-tooltip="Swap languages">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-swap" /></svg>
+          </button>
+        </div>
+
+        <!-- Target language bar -->
+        <div class="langbar langbar--target" id="target-bar">
+          <button class="lang-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="target-popover">
+            <span class="lang-trigger__label">French</span>
+            <svg class="icon icon--sm lang-trigger__chevron" aria-hidden="true" focusable="false"><use href="#i-chevron-down" /></svg>
+          </button>
+          <div class="chips" role="group" aria-label="Recent target languages"></div>
+          <div class="picker" id="target-popover" hidden>
+            <div class="picker__search">
+              <svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-search" /></svg>
+              <input class="picker__input" type="text" role="combobox" aria-expanded="false" aria-controls="target-listbox"
+                     aria-autocomplete="list" aria-label="Search target languages" placeholder="Search languages"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="picker__list" id="target-listbox" role="listbox" aria-label="Target languages"></div>
+          </div>
+        </div>
+
+        <!-- Source pane -->
+        <div class="pane pane--source">
+          <div class="editor">
+            <label for="input" class="sr-only">Text to translate</label>
+            <textarea id="input" maxlength="5000" rows="5" placeholder="Type, paste, speak — or drop a .txt file"
+                      aria-describedby="char-count" autocomplete="off" spellcheck="false" autocorrect="off"
+                      autocapitalize="off" data-gramm="false" data-gramm_editor="false"
+                      data-enable-grammarly="false" data-lt-active="false"></textarea>
+            <button id="clear" class="icon-btn icon-btn--sm editor__clear" type="button" aria-label="Clear text" data-tooltip="Clear" data-tooltip-align="end" hidden>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x" /></svg>
+            </button>
+            <div class="dropzone" aria-hidden="true">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-upload" /></svg>
+              Drop a .txt file to translate it
+            </div>
+          </div>
+          <div id="roman-hint" class="roman-hint" hidden>
+            <p id="roman-hint-text" class="roman-hint__text"></p>
+            <button id="roman-toggle" class="btn btn--outline btn--sm" type="button" aria-pressed="false"></button>
+          </div>
+          <div class="pane__footer">
+            <div class="pane__tools">
+              <button id="mic" class="icon-btn mic-btn" type="button" aria-label="Voice input" aria-pressed="false" data-tooltip="Voice input" hidden>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-mic" /></svg>
+              </button>
+              <button id="upload" class="icon-btn" type="button" aria-label="Translate a .txt file" data-tooltip="Upload .txt">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-paperclip" /></svg>
+              </button>
+              <input id="file-input" type="file" accept=".txt,text/plain" hidden />
+              <button id="speak-in" class="icon-btn speak-btn" type="button" aria-label="Listen to source text" aria-pressed="false" data-tooltip="Listen" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-volume" /></svg>
+                <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+              </button>
+              <span id="detected-badge" class="badge" hidden></span>
+            </div>
+            <div class="pane__tools">
+              <span id="char-count" class="counter">0 / 5,000</span>
+              <button id="translate" class="btn btn--primary" type="button">
+                <span class="spinner" aria-hidden="true"></span>
+                <span class="btn__label">Translate</span>
+                <kbd class="btn__kbd hide-sm" aria-hidden="true"><span data-mod>⌘</span>↵</kbd>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target pane -->
+        <div class="pane pane--target">
+          <div id="multi-bar" class="multi-bar" hidden>
+            <ul id="multi-chips" class="multi-chips" aria-label="Selected target languages"></ul>
+            <span id="multi-count" class="multi-count"></span>
+          </div>
+          <div id="output" class="output" aria-live="polite" aria-busy="false" aria-label="Translation">
+            <p id="output-placeholder" class="output__placeholder">Translation will appear here</p>
+            <p id="output-text" class="output__text" hidden></p>
+            <p id="output-note" class="output__note" hidden></p>
+            <div id="output-alts" class="alts" hidden>
+              <p class="alts__label">Alternatives</p>
+              <ul id="alts-list" class="alts__list"></ul>
+            </div>
+            <ul id="multi-results" class="multi-results" hidden></ul>
+            <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <div id="output-error" class="error-banner" role="alert" hidden>
+              <svg class="icon error-banner__icon" aria-hidden="true" focusable="false"><use href="#i-alert-circle" /></svg>
+              <div class="error-banner__body">
+                <p id="output-error-title" class="error-banner__title"></p>
+                <p id="output-error-tried" class="error-banner__tried" hidden></p>
+                <p id="output-error-detail" class="error-banner__detail"></p>
+              </div>
+              <button id="retry" class="btn btn--outline btn--sm" type="button">
+                <svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-refresh" /></svg>
+                Retry
+              </button>
+            </div>
+          </div>
+          <div class="pane__footer">
+            <div id="output-meta" class="meta"></div>
+            <div class="pane__tools">
+              <button id="speak-out" class="icon-btn speak-btn" type="button" aria-label="Listen to translation" aria-pressed="false" data-tooltip="Listen" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-volume" /></svg>
+                <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+              </button>
+              <button id="copy" class="icon-btn" type="button" aria-label="Copy translation" data-tooltip="Copy" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-copy" /></svg>
+              </button>
+              <button id="download" class="icon-btn" type="button" aria-label="Download translation as text file" data-tooltip="Download .txt" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-download" /></svg>
+              </button>
+              <button id="share" class="icon-btn" type="button" aria-label="Copy a share link" data-tooltip="Share link" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-link" /></svg>
+              </button>
+              <button id="star" class="icon-btn" type="button" aria-label="Star this translation" aria-pressed="false" data-tooltip="Star" data-tooltip-align="end" disabled>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-star" /></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="tip">
+        Translates automatically as you type. Drop a .txt file onto the text box to translate it. Press <kbd data-mod>⌘</kbd><kbd>Enter</kbd> to translate now.
+      </p>
+    </section>
+
+    <section class="container history" aria-labelledby="history-title">
+      <div class="history__head">
+        <h2 id="history-title" class="history__title">
+          <span class="section-icon" aria-hidden="true"><svg class="icon icon--sm" focusable="false"><use href="#i-history" /></svg></span>
+          Recent translations
+        </h2>
+        <div class="tabs" role="tablist" aria-label="History lists">
+          <button id="tab-recent" class="tab" type="button" role="tab" aria-selected="true" aria-controls="history-panel" data-tab="recent">
+            Recent <span id="count-recent" class="tab__count">0</span>
+          </button>
+          <button id="tab-starred" class="tab" type="button" role="tab" aria-selected="false" aria-controls="history-panel" data-tab="starred" tabindex="-1">
+            Starred <span id="count-starred" class="tab__count">0</span>
+          </button>
+        </div>
+        <button id="clear-history" class="btn btn--ghost btn--sm history__clear" type="button" hidden>
+          <svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="#i-trash" /></svg>
+          Clear all
+        </button>
+      </div>
+
+      <div id="history-panel" class="history__panel" role="tabpanel" aria-labelledby="tab-recent" tabindex="-1">
+        <ul id="history-list" class="history__list"></ul>
+        <div id="history-empty" class="empty" hidden>
+          <svg class="empty__art" viewBox="0 0 160 120" aria-hidden="true" focusable="false">
+            <ellipse cx="80" cy="108" rx="56" ry="6" class="empty__shadow" />
+            <rect x="34" y="22" width="84" height="64" rx="12" class="empty__card empty__card--back" transform="rotate(-8 76 54)" />
+            <rect x="44" y="18" width="84" height="68" rx="12" class="empty__card" />
+            <rect x="56" y="32" width="44" height="7" rx="3.5" class="empty__line empty__line--accent" />
+            <rect x="56" y="46" width="60" height="6" rx="3" class="empty__line" />
+            <rect x="56" y="58" width="50" height="6" rx="3" class="empty__line" />
+            <rect x="56" y="70" width="34" height="6" rx="3" class="empty__line" />
+            <circle cx="124" cy="22" r="14" fill="url(#brand-gradient)" />
+            <path d="M118 22h12M126 18l4 4-4 4" class="empty__arrow" />
+          </svg>
+          <h3 id="empty-title" class="empty__title">No translations yet</h3>
+          <p id="empty-text" class="empty__text">Your last 20 translations will show up here.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="footer__brand">
+        <svg class="footer__mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="9" fill="url(#brand-gradient)" />
+          <path d="M15 13h9a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-.5v3L20 24h-5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3z" fill="#fff" />
+        </svg>
+        <span>Translate<span class="brand__x">X</span></span>
+      </span>
+      <p>Built for the CodeAlpha AI Internship · FastAPI · Microsoft/Google Translation APIs</p>
+    </div>
+  </footer>
+
+  <div id="toasts" class="toasts" aria-live="polite" aria-relevant="additions"></div>
+
+  <dialog id="shortcuts-dialog" class="modal" aria-labelledby="shortcuts-title">
+    <div class="modal__head">
+      <h2 id="shortcuts-title" class="modal__title">
+        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-keyboard" /></svg>
+        Keyboard shortcuts
+      </h2>
+      <button id="shortcuts-close" class="icon-btn icon-btn--sm" type="button" aria-label="Close shortcuts">
+        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x" /></svg>
+      </button>
+    </div>
+    <dl class="shortcuts">
+      <div class="shortcuts__row"><dt>Translate now</dt><dd><kbd data-mod>⌘</kbd><kbd>Enter</kbd></dd></div>
+      <div class="shortcuts__row"><dt>Swap languages</dt><dd><kbd data-mod>⌘</kbd><kbd>Shift</kbd><kbd>S</kbd></dd></div>
+      <div class="shortcuts__row"><dt>Copy translation</dt><dd><kbd data-mod>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd></dd></div>
+      <div class="shortcuts__row"><dt>Close menus, stop voice input</dt><dd><kbd>Esc</kbd></dd></div>
+      <div class="shortcuts__row"><dt>Navigate language list</dt><dd><kbd>↑</kbd><kbd>↓</kbd><kbd>Enter</kbd></dd></div>
+      <div class="shortcuts__row"><dt>Show this dialog</dt><dd><kbd>?</kbd></dd></div>
+    </dl>
+  </dialog>
+</body>
+</html>
