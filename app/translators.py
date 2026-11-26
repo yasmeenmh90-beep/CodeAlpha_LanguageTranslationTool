@@ -30,18 +30,19 @@ import httpx
 from .detect import detect_language, dominant_script
 from .languages import LANGUAGES, MICROSOFT_CODE_MAP
 
-PROVIDER_ORDER: tuple[str, ...] = ("microsoft", "google", "mymemory", "free")
+PROVIDER_ORDER: tuple[str, ...] = ("ollama", "microsoft", "google", "mymemory", "free")
 PROVIDER_LABELS = {
+    "ollama": "Ollama (local AI)",
     "microsoft": "Microsoft Translator",
     "google": "Google Cloud Translation",
     "mymemory": "MyMemory",
     "free": "Google (free web)",
 }
 # Environment variable each provider needs (None = works without a key).
-PROVIDER_REQUIRES = {"microsoft": "AZURE_TRANSLATOR_KEY", "google": "GOOGLE_API_KEY", "mymemory": None, "free": None}
+PROVIDER_REQUIRES = {"ollama": "LINGUA_OLLAMA_MODEL", "microsoft": "AZURE_TRANSLATOR_KEY", "google": "GOOGLE_API_KEY", "mymemory": None, "free": None}
 # Engines whose auto-detect copes with romanized Urdu/Hindi. MyMemory needs an explicit
 # source language and only matches translation memory, so it can't.
-ROMANIZED_CAPABLE = frozenset({"microsoft", "google", "free"})
+ROMANIZED_CAPABLE = frozenset({"ollama", "microsoft", "google", "free"})
 
 logger = logging.getLogger(__name__)
 
@@ -360,7 +361,23 @@ def configured_chain() -> list[str]:
     return [n for n in PROVIDER_ORDER if is_configured(n)]
 
 
+class OllamaTranslator:
+    name = "ollama"
+
+    async def translate(self, text, source, target):
+        from .local_ai import complete
+        try:
+            output, _ = await complete(
+                "Translate to the target language. Interpret Roman Urdu or Hindi and mixed-language input. Preserve facts and return only translation.",
+                {"text": text, "source": LANGUAGES[source], "target": LANGUAGES[target]})
+        except (httpx.HTTPError, TimeoutError, ValueError, KeyError, TypeError):
+            raise TranslationError("Local AI unavailable. Start Ollama and install the configured model.") from None
+        return TranslationResult(output, None, self.name)
+
+
 def build_provider(name: str):
+    if name == "ollama":
+        return OllamaTranslator()
     if name == "microsoft":
         key = os.getenv("AZURE_TRANSLATOR_KEY")
         if not key:
@@ -442,7 +459,7 @@ async def translate_text(
             names = [n for n in names if n in ROMANIZED_CAPABLE]
     else:
         if romanized and requested not in ROMANIZED_CAPABLE:
-            reason = f"{PROVIDER_LABELS[requested]} can't translate romanized text. Choose Auto, Google or Microsoft."
+            reason = f"{PROVIDER_LABELS[requested]} can't translate romanized text. Choose Auto, Ollama, Google or Microsoft."
             raise ProvidersExhausted([(requested, reason)], [requested], pinned=True)
         names = [requested]
 
