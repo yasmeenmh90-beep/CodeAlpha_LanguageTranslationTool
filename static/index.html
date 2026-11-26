@@ -21,6 +21,7 @@
   <script type="module" src="/static/js/advanced.js"></script>
 <script type="module" src="/static/js/multimodal.js"></script>
 <script type="module" src="/static/js/dna.js"></script>
+<script type="module" src="/static/js/learning.js"></script>
 </head>
 <body>
   <!-- Icon sprite (Lucide-style, hand-inlined). Referenced with <use href="#i-name">. -->
@@ -110,6 +111,7 @@
       <a href="#advanced-studio" class="rail-link">Advanced intelligence</a>
       <a href="#multimodal-studio" class="rail-link">Multimodal studio</a>
 <a href="#dna-studio" class="rail-link">Translation DNA</a>
+<a href="#learning-studio" class="rail-link">Learning & analytics</a>
 <a href="#workspace-guide" class="rail-link"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Workspace guide</span></a>
     </nav>
     <div class="rail-note"><span class="rail-caption">LINGUA / 01</span><p>Language without boundaries.</p><small>CodeAlpha · AI Internship</small></div>
@@ -382,7 +384,12 @@
 </form>
 <div class="dna-panel"><div id="dna-helix" aria-hidden="true"></div><div id="dna-results" aria-live="polite">Not evaluated</div></div>
 </section>
-<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">05 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
+<section class="container workspace-guide" id="learning-studio"><p class="rail-caption">05 / LEARNING</p><h2>Vocabulary & analytics</h2>
+<form id="learning-form" class="advanced-form"><label>Word or phrase<input id="learning-front" required maxlength="500"></label><label>Translation<input id="learning-back" required maxlength="500"></label><button class="btn btn--primary">Save flashcard</button></form>
+<p id="learning-status" role="status"></p><div id="learning-review" class="advanced-form"></div><div id="learning-library"></div>
+<h3>Translation activity</h3><p>Device-local records from the standard translation workspace only (latest 1,000 outcomes). No original text stored in analytics.</p><div id="learning-metrics" class="guide-grid"></div>
+<button type="button" id="learning-export" class="btn btn--outline">Export analytics JSON</button><button type="button" id="learning-reset" class="btn btn--outline">Clear analytics</button></section>
+<section class="container workspace-guide" id="workspace-guide" aria-labelledby="guide-title"><p class="rail-caption">06 / GUIDE</p><h2 id="guide-title">Make every word count.</h2><div class="guide-grid"><article><h3>Speak or type</h3><p>Enter text or use voice input when your browser supports it.</p></article><article><h3>Translate together</h3><p>Enable multiple targets to translate into up to five languages.</p></article><article><h3>Keep what matters</h3><p>Star useful translations or download a text copy.</p></article></div></section>
   </main>
   </div>
 
